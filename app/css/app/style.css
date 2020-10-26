@@ -1,0 +1,49 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 19, 2020, 9:59:42 PM
+    Author     : Onin
+*/
+body{
+    
+}
+.hidden{
+    display: none;
+}
+
+.timer h1 {
+  text-align: center;
+  font-family: "Arial Black";   
+  font-size: 20.9vw;
+  line-height: 23VW;
+  transform: scale(1, 1.5);
+}
+
+.timer{
+    padding-bottom: 30px
+}
+
+.btnlist{
+    position: fixed;
+    left:20px;
+    top: 17px;
+}
+.timer-control{
+    position: fixed;
+    right: 20px;
+    top: 17px;
+    display: none;
+}
+.task-item{
+    cursor: pointer;
+}
+.blockMsg{
+    z-index: 99999!important;
+}
+.chk{
+    padding-top: 0;
+    margin-top: -26px;
+}

@@ -1,0 +1,9 @@
+RewriteEngine on
+
+RewriteBase /
+RewriteRule ^task/accept-timer-invitation/(.*)$ index\.php?controller=task&action=accept-timer-invitation&id=$1 [L,QSA]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^/.]+)/(.*)$ index\.php?controller=$1&action=$2 [L,QSA]
+
+RewriteRule ^([^/.]+)$ index\.php?controller=$1 [L,QSA]

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <script>
+            var dt = new Date(1599054557 * 1000);
+            document.write("Current Date: " + dt);
+            dt.setHours(dt.getHours() + 2);
+            dt.setMinutes(dt.getMinutes() + 20);
+            document.write("<br>Updated Date: " + dt);
+            dt.setMilliseconds(dt.getMilliseconds() + 1000);
+            document.write("<br>Updated Date: "+dt);
+         </script>
+    </body>
+</html>
