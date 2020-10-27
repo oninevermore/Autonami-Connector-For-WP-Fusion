@@ -24,7 +24,7 @@
                 <button title="Duplicate Timer" data-toggle="tooltip" data-theme="dark" type="button" data-id="<?=$item->id?>" class="btn btn-icon btn-warning btn-circle btn-sm mr-2 duplicate"><i class="fab fa-creative-commons-share"></i></button>
                 <button title="Share Timer" data-toggle="tooltip" data-theme="dark" type="button" data-id="<?=$item->id?>" class="btn btn-icon btn-primary btn-circle btn-sm mr-2 share"><i class="fas fa-share-alt"></i></button>
                 <button title="Edit Timer Set" <?=$item->button_state?> data-toggle="tooltip" data-theme="dark" type="button" data-id="<?=$item->id?>" class="btn btn-icon btn-success btn-circle btn-sm mr-2 edit-timer"><i class="flaticon-edit-1"></i></button>
-                <button data-id="<?=$item->id?>" <?=$item->button_state?> title="Delete" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-danger btn-circle btn-sm mr-2 deletetimer"><i class="flaticon-cancel"></i></button>
+                <button data-id="<?=$item->id?>" title="<?=($item->button_state == "disabled" ? "Unshare" : "Delete") ?>" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-danger btn-circle btn-sm mr-2 deletetimer"><i class="flaticon-cancel"></i></button>
             </span>
             <!--end::Lable-->
         </div>

@@ -22,6 +22,3 @@
                 define("DB_PASSWORD", "i-5t)!;qhDkf");
                 define("DB_Name", "everlabs_evermoretimer");
 	}
-        
-        
-?>  

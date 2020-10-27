@@ -70,10 +70,23 @@ class TaskIntervalDataManager{
     }
     
     public static function delete_task_intervals_by_id($id){
-        $query = "DELETE FROM `tasks` "
-                . "WHERE id" . (is_array($id) ? " IN(" . implode(",", $id) . ")" : " = " . $id);
-        //die($query);
-        Database::query($query);
+        if(is_array($id)){
+            foreach($id as $_id){
+                $task_user_id = Database::get("tasks", "user_id", array("id" => $_id));
+                if($task_user_id != Membership::current_user()->id){
+                    Database::query("DELETE FROM shared_task WHERE user_id = " . Membership::current_user()->id . " AND task_id = " . $_id);
+                }else{
+                    Database::query("DELETE FROM tasks WHERE id = " . $_id);
+                }
+            }
+        }else{
+            $task_user_id = Database::get("tasks", "user_id", array("id" => $id));
+            if($task_user_id != Membership::current_user()->id){
+                Database::query("DELETE FROM shared_task WHERE user_id = " . Membership::current_user()->id . " AND task_id = " . $id);
+            }else{
+                Database::query("DELETE FROM tasks WHERE id = " . $id);
+            }
+        }
     }
     
     public static function delete_sub_task_intervals_by_id($id){
@@ -105,7 +118,7 @@ class TaskIntervalDataManager{
         return $task_invitation;
     }
     
-    public static function accept_task_invitation($ids, $email){
+    public static function accept_task_invitation($id, $ids, $email){
         $new_ids = array();
         if(is_array($ids)){
             $new_ids = $ids;

@@ -111,7 +111,7 @@ class Task extends BaseController{
         if(!empty($id)){
             $task_invitation = TaskIntervalDataManager::get_task_invitation_by_id($id);
             if($task_invitation["email"] == Membership::current_user()->email){
-                   TaskIntervalDataManager::accept_task_invitation($task_invitation["timer_ids"], $task_invitation["email"]);
+                   TaskIntervalDataManager::accept_task_invitation($id, $task_invitation["timer_ids"], $task_invitation["email"]);
                    $this->redirect(REAL_URL);
             }else{
                 die("Invalid Request");
