@@ -227,7 +227,8 @@ var KTLoginGeneral = function() {
 
     var _handleForgotForm = function(e) {
         var validation;
-
+        var form = $(this).closest('form');
+        var action = form.attr("action");
         // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
         validation = FormValidation.formValidation(
             KTUtil.getById('kt_login_forgot_form'),
@@ -257,7 +258,36 @@ var KTLoginGeneral = function() {
 
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
-                    // Submit form
+                    form.ajaxSubmit({
+                        url: action,
+                        success: function(response, status, xhr, $form) {
+                            if(response.result == "success"){
+                                //similate 2s delay
+                               setTimeout(function() {
+                                   btn.removeClass('spinner spinner-right pr-12 spinner-sm spinner-white').text('Success!');
+
+                                   setTimeout(function(){
+                                       form.clearForm();
+                                       form.resetForm();
+                                       location.reload();
+                                   }, 1500);
+
+                               }, 2000);
+                            }else{
+                                swal.fire({
+                                    text: response.error_message,
+                                    icon: "error",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    confirmButtonClass: "btn font-weight-bold btn-light"
+                                }).then(function() {
+                                    KTUtil.scrollTop();
+                                    btn.removeClass('spinner spinner-right pr-12 spinner-sm spinner-white').text('Submit!');
+                                    $('#kt_login_signup_cancel').show();
+                                });
+                            }
+                        }
+                    });
                     KTUtil.scrollTop();
                 } else {
                     swal.fire({

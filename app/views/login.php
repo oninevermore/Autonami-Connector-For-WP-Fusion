@@ -27,7 +27,7 @@
                         <div class="form-group">
                             <div class="d-flex justify-content-between mt-n5">
                                 <label class="font-size-h7 text-dark-50 pt-5">Password</label>
-<!--                                <a href="javascript:;" class="text-primary text-hover-primary pt-5" id="kt_login_forgot">Forgot Password ?</a>-->
+                                <a  <a href="javascript:;" class="text-primary text-hover-primary pt-5" id="kt_login_forgot">Forgot Password ?</a>
                             </div>
                             <input class="form-control form-control-solid h-auto py-7 px-6 rounded-lg" type="password" name="password" autocomplete="off" />
                         </div>
@@ -106,7 +106,7 @@
                 <!--begin::Forgot-->
                 <div class="login-form login-forgot hidden">
                     <!--begin::Form-->
-                    <form class="form" novalidate="novalidate" id="kt_login_forgot_form">
+                    <form class="form" novalidate="novalidate" id="kt_login_forgot_form" action="<?=REAL_URL?>/login/forgot-password">
                         <!--begin::Title-->
                         <div class="text-center pt-lg-40 mt-lg-20 pb-15">
                             <h3 class="font-weight-bolder text-dark display5">Forgotten Password ?</h3>

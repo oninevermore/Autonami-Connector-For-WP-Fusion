@@ -45,7 +45,7 @@ class Login extends BaseController{
             $user = UserDataManager::get_user($this->email, $this->password);
             Membership::authenticate((object)$user);
             $response->result = "success";
-            $response->return_url = REAL_URL . $this->redirect;
+            $response->return_url = empty($this->redirect) ? REAL_URL : $this->redirect;
         }else{
             $response->result = "failed";
             $response->error_message = "Invalid email or password";

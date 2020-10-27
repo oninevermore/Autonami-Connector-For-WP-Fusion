@@ -160,7 +160,7 @@ var runTimer = function(){
     var btn = $(".pause-play");
     btn.removeClass("btn-success").addClass("btn-warning");
     $("i", btn).removeClass("fa-play-circle").addClass("fa-pause-circle");
-    toggleFullScreen();
+    //toggleFullScreen();
     timer = setInterval(function () {
         displayLabels();
         if(seconds > 0){
