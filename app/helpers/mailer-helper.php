@@ -34,6 +34,13 @@ class MailerHelper {
         $model->sender = $current_user->first_name . "  " . $current_user->last_name;
         $model->url = REAL_URL . "/task/accept-timer-invitation/" . $invitation_id;
         $email_body = self::get_invitation_email_template($model);
-        mail($email, "Evermore Timer Invitation", $email_body);
+        
+        $headers = "MIME-Version: 1.0" . "\r\n";
+        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+
+        // More headers
+        $headers .= 'From: <lee@evermoreventures.com>' . "\r\n";
+        mail($email, "Evermore Timer Invitation", $email_body, $headers);
+        //s
     }
 }
