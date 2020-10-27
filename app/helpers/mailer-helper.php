@@ -41,6 +41,5 @@ class MailerHelper {
         // More headers
         $headers .= 'From: <lee@evermoreventures.com>' . "\r\n";
         mail($email, "Evermore Timer Invitation", $email_body, $headers);
-        //s
     }
 }
