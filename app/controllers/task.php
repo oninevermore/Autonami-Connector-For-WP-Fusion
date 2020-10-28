@@ -114,7 +114,7 @@ class Task extends BaseController{
                    TaskIntervalDataManager::accept_task_invitation($id, $task_invitation["timer_ids"], $task_invitation["email"]);
                    $this->redirect(REAL_URL);
             }else{
-                die("Invalid Request");
+                $this->redirect(REAL_URL . "/invalid-request");
             }
         }
             
