@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\BaseController;
 use App\DataManager\UserDataManager;
 use App\Components\Membership;
+use App\Helpers\MailerHelper;
 
 class Login extends BaseController{
 
@@ -52,5 +53,13 @@ class Login extends BaseController{
         }
         
         $this->response_json($response);
+    }
+    
+    public function forgot_password_request(){
+        $user = UserDataManager::get_user_by_email($this->email);
+        if(isset($user["id"])){
+            $request_id = UserDataManager::add_user_password_request($user["id"]);
+            MailerHelper::send_forgot_password_email($email, $request_id);
+        }
     }
 }

@@ -70,4 +70,26 @@ class UserDataManager{
     public static function get_all_user(){
         return Database::select("users", array("first_name", "last_name", "email"));
     }
+    
+    public static function add_user_password_request($id){
+        $request_id =  uniqid(); 
+        $result = Database::insert("password_request", [
+            'id' => $request_id,
+            'user_id' => $id,
+            'status' => "PENDING",
+            'date_created' => date("Y-m-d h:i:s")
+        ]);
+
+        return $request_id;
+    }
+    
+    public static function get_password_request_by_id($id){
+        $task_invitation = Database::get("password_request", "*", [
+                "AND" => [
+                    "id" => $id, 
+                    "status" => "PENDING"
+                ]
+            ]);
+        return $task_invitation;
+    }
 }

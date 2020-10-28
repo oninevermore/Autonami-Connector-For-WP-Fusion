@@ -2,7 +2,6 @@
 namespace App\DataManager;
 use App\Components\Database;
 use App\Components\Membership;
-use App\Helpers\MailerHelper;
 
 class TaskIntervalDataManager{
     public static function add_new_task_interval($task){
@@ -96,7 +95,8 @@ class TaskIntervalDataManager{
         Database::query($query);
     }
     
-    public static function share_task_by_email($emails, $id){
+    public static function get_ids_for_share($emails, $id){
+        $ids = array();
         if(sizeof($emails) > 0){
             foreach ($emails as $_email){
                 $request_id =  uniqid();  
@@ -108,13 +108,19 @@ class TaskIntervalDataManager{
                     'date_created' => date("Y-m-d h:i:s")
                 ]);  
                 
-                MailerHelper::email_user($_email, $request_id);
+                $ids[] = array($_email, $request_id);
             }
         }   
+        return $ids;
     }
     
     public static function get_task_invitation_by_id($id){
-        $task_invitation = Database::get("shared_task_request", "*", array("id" => $id));
+        $task_invitation = Database::get("shared_task_request", "*", [
+                "AND" => [
+                    "id" => $id, 
+                    "status" => "PENDING"
+                ]
+            ]);
         return $task_invitation;
     }
     

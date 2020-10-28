@@ -12,6 +12,7 @@ use App\Core\BaseController;
 use App\DataManager\TaskIntervalDataManager;
 use App\Components\Membership;
 use App\Helpers\TaskHelper;
+use App\Helpers\MailerHelper;
 
 class Task extends BaseController{
     
@@ -93,7 +94,13 @@ class Task extends BaseController{
                     $emails[] = isset($value->email) ? $value->email : $value->value;
                 }
                 
-                $result = TaskIntervalDataManager::share_task_by_email($emails, $_POST["id"]);
+                $_ids = TaskIntervalDataManager::get_ids_for_share($emails, $_POST["id"]);
+                
+                if(sizeof($_ids) > 0){
+                    foreach ($_ids as $info){
+                        MailerHelper::send_timer_invitation_email($info[0], $info[1]);
+                    }
+                }
             }
         }
         if($result > 0){
