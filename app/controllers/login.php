@@ -63,7 +63,7 @@ class Login extends BaseController{
             MailerHelper::send_forgot_password_email($this->email, $user["first_name"], $request_id);
             
             $response->result = "success";
-            $response->success_message = "We have sent an email for password reset at your email address. Please check inbox and follow the instruction.";
+            $response->success_message = "We have sent an email for password reset in your email address.";
         }else{
             $response->result = "failed";
             $response->error_message = "We're sorry, the user with that email address doesn't exist.";
