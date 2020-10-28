@@ -177,8 +177,28 @@
     </div>
 </div>
 
+<div class="modal fade" id="modalManageAccount" data-backdrop="static" tabindex="0" role="dialog" aria-labelledby="staticBackdrop" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><span class="tmr-typ-name">Manage Account</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <i aria-hidden="true" class="ki ki-close"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="manageAccountBody">
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light-primary font-weight-bold btn-close" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="btnlist">
     <a href="<?=REAL_URL?>/logout" title="Logout" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-danger"><i class="fas fa-sign-out-alt"></i></a>
+    <button title="Manage Account" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-primary btnManageAccount"><i class="fas fa-user-edit"></i></button>
     <button title="Saved Timet Sets" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-info btnTimerSets"><i class="fas fa-th-list"></i></button>
     <div class="btn-group" role="group">
         <button title="New Timer Set" data-theme="dark" type="button" class="btn btn-success font-weight-bold dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

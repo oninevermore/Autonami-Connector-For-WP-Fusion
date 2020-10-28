@@ -18,12 +18,24 @@ class UserDataManager{
         return $result;
     }
     
-    public static function update_password($user_id, $password, $request_id){
+    public static function save_user($user){
+    
+        $result = Database::update("users", [
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name],
+            ['id' => $user->user_id]
+         );
+        return $result;
+    }
+    
+    public static function update_password($user_id, $password){
         Database::update("users", [
             'password' => crypt($password, self::$salt)],
             ['id' => $user_id]
         );  
-        
+    }
+    
+    public static function update_password_request($request_id){
         Database::update("password_request", [
             'status' => "ACCEPTED",
             'date_updated' => date("Y-m-d h:i:s")],

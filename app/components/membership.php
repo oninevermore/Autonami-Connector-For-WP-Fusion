@@ -34,6 +34,11 @@ class Membership {
         $_SESSION['EMAIL'] = $user->email;
     }
     
+    public static function update_info($user){
+       $_SESSION['FIRSTNAME'] = $user->first_name;
+       $_SESSION['LASTNAME'] = $user->last_name; 
+    }
+    
     public static function de_authenticate(){
         unset($_SESSION['AUTHENTICATION']);
         unset($_SESSION['USERID']);

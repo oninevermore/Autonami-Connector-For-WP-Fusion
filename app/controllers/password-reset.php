@@ -35,7 +35,8 @@ class PasswordReset extends BaseController{
                 $this->model->error_message = "Please enter new password";
             }else{
                 if($this->password == $this->cpassword){
-                    UserDataManager::update_password($request["user_id"], $this->password, $this->request_id);
+                    UserDataManager::update_password($request["user_id"], $this->password);
+                    UserDataManager::update_password_request($this->request_id);
                     $this->redirect(REAL_URL . "/login");
                 }else{
                     $this->model->error_message = "Password not matched";

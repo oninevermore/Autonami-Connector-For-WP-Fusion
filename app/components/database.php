@@ -55,4 +55,19 @@ class Database {
         self::set_connection();
         return self::$conn->query($query, $map);
     }
+    
+    public static function debug(){
+        self::set_connection();
+        return self::$conn->debug();
+    }
+    
+    public static function error(){
+        self::set_connection();
+        return self::$conn->error();
+    }
+    
+    public static function last(){
+        self::set_connection();
+        return self::$conn->last();
+    }
 }
