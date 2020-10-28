@@ -17,6 +17,8 @@ class BaseController {
                 $action = str_replace("-", "_", $child->action);
                 if($action && method_exists($child, $action)){
                     $child->$action();
+                }else{
+                    $child->index();
                 }
             }else{
                 $child->index();

@@ -56,10 +56,18 @@ class Login extends BaseController{
     }
     
     public function forgot_password_request(){
+        $response = new \stdClass;
         $user = UserDataManager::get_user_by_email($this->email);
         if(isset($user["id"])){
             $request_id = UserDataManager::add_user_password_request($user["id"]);
-            MailerHelper::send_forgot_password_email($email, $request_id);
+            MailerHelper::send_forgot_password_email($this->email, $user["first_name"], $request_id);
+            
+            $response->result = "success";
+            $response->success_message = "We have sent an email for password reset at your email address. Please check inbox and follow the instruction.";
+        }else{
+            $response->result = "failed";
+            $response->error_message = "We're sorry, the user with that email address doesn't exist.";
         }
+        $this->response_json($response);
     }
 }

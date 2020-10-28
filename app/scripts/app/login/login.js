@@ -227,8 +227,6 @@ var KTLoginGeneral = function() {
 
     var _handleForgotForm = function(e) {
         var validation;
-        var form = $(this).closest('form');
-        var action = form.attr("action");
         // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/
         validation = FormValidation.formValidation(
             KTUtil.getById('kt_login_forgot_form'),
@@ -255,24 +253,24 @@ var KTLoginGeneral = function() {
         // Handle submit button
         $('#kt_login_forgot_submit').on('click', function (e) {
             e.preventDefault();
-
+            var form = $(this).closest('form');
+            var action = form.attr("action");
             validation.validate().then(function(status) {
                 if (status == 'Valid') {
                     form.ajaxSubmit({
                         url: action,
                         success: function(response, status, xhr, $form) {
                             if(response.result == "success"){
-                                //similate 2s delay
-                               setTimeout(function() {
-                                   btn.removeClass('spinner spinner-right pr-12 spinner-sm spinner-white').text('Success!');
-
-                                   setTimeout(function(){
-                                       form.clearForm();
-                                       form.resetForm();
-                                       location.reload();
-                                   }, 1500);
-
-                               }, 2000);
+                               swal.fire({
+                                    text: response.success_message,
+                                    icon: "success",
+                                    buttonsStyling: false,
+                                    confirmButtonText: "Ok, got it!",
+                                    confirmButtonClass: "btn font-weight-bold btn-light"
+                                }).then(function() {
+                                    KTUtil.scrollTop();
+                                    _showForm('signin');
+                                });
                             }else{
                                 swal.fire({
                                     text: response.error_message,

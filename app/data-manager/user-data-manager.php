@@ -18,6 +18,19 @@ class UserDataManager{
         return $result;
     }
     
+    public static function update_password($user_id, $password, $request_id){
+        Database::update("users", [
+            'password' => crypt($password, self::$salt)],
+            ['id' => $user_id]
+        );  
+        
+        Database::update("password_request", [
+            'status' => "ACCEPTED",
+            'date_updated' => date("Y-m-d h:i:s")],
+            ['id' => $request_id]
+        ); 
+    }
+    
     public static function is_email_exists($email){
         return Database::has("users", ["AND" => ["email" => $email]]);
     }

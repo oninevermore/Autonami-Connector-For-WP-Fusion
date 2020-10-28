@@ -41,21 +41,17 @@ class MailerHelper {
     public static function send_forgot_password_email($email, $first_name, $request_id){
         $model = new \stdClass;
         $model->first_name = $first_name;
-        $model->url = REAL_URL . "/login/password-reset/" . $request_id;
+        $model->url = REAL_URL . "/password-reset/" . $request_id;
         $email_body = self::get_email_template($model, "password-request");
         self::send_html_email($email, "Evermore Timer Password Reset", $email_body);
     }
     
-    public static function send_html_email($email, $subject, $body, $from){
-        $_from = "admin@evermoreventures.com";
-        if(!empty($from)){
-            $_from = $from;
-        }
+    public static function send_html_email($email, $subject, $body, $from = "admin@evermoreventures.com"){
         $headers = "MIME-Version: 1.0" . "\r\n";
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
 
         // More headers
-        $headers .= 'From: <' . $_from . '>' . "\r\n";
-        mail($email, "Evermore Timer Invitation", $email_body, $headers);
+        $headers .= 'From: <' . $from . '>' . "\r\n";
+        mail($email, $subject, $body, $headers);
     }
 }

@@ -9,7 +9,7 @@
                 <!--begin::Signin-->
                 <div class="login-form login-signin">
                     <!--begin::Form-->
-                    <form class="form" novalidate="novalidate" id="kt_login_signin_form" action="<?=REAL_URL?>/login/logged_in">
+                    <form class="form" method="post"  novalidate="novalidate" id="kt_login_signin_form" action="<?=REAL_URL?>/login/logged_in">
                         <!--begin::Title-->
                         <div class="pt-lg-40 mt-lg-10 pb-15">
                             <h3 class="font-weight-bolder text-dark display4">Welcome </h3>
@@ -54,7 +54,7 @@
                 <!--begin::Signup-->
                 <div class="login-form login-signup hidden">
                     <!--begin::Form-->
-                    <form class="form" novalidate="novalidate" id="kt_login_signup_form" action="<?=REAL_URL?>/login/add-new-user">
+                    <form class="form" method="post"  novalidate="novalidate" id="kt_login_signup_form" action="<?=REAL_URL?>/login/add-new-user">
                         <!--begin::Title-->
                         <div class="text-center pt-lg-30 pb-15">
                             <h3 class="font-weight-bolder text-dark display5">Sign Up</h3>
@@ -106,10 +106,10 @@
                 <!--begin::Forgot-->
                 <div class="login-form login-forgot hidden">
                     <!--begin::Form-->
-                    <form class="form" novalidate="novalidate" id="kt_login_forgot_form" action="<?=REAL_URL?>/login/forgot-password">
+                    <form class="form" method="post" novalidate="novalidate" id="kt_login_forgot_form" action="<?=REAL_URL?>/login/forgot-password-request">
                         <!--begin::Title-->
                         <div class="text-center pt-lg-40 mt-lg-20 pb-15">
-                            <h3 class="font-weight-bolder text-dark display5">Forgotten Password ?</h3>
+                            <h3 class="font-weight-bolder text-dark display5">Forgotten Password?</h3>
                             <p class="text-muted font-weight-bold font-size-h4">Enter your email to reset your password</p>
                         </div>
                         <!--end::Title-->

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: Oct 27, 2020 at 05:25 PM
+-- Generation Time: Oct 28, 2020 at 10:17 AM
 -- Server version: 5.7.21
 -- PHP Version: 7.2.4
 
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `current_timers` (
   `elapsed_time` bigint(20) NOT NULL,
   `last_time_updated` bigint(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=92 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=93 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `current_timers`
@@ -106,7 +106,24 @@ INSERT INTO `current_timers` (`id`, `task_id`, `status`, `user_id`, `date_starte
 (88, 54, 'DONE', 17, 1602466274, 0, 1602466306),
 (89, 54, 'DONE', 17, 1602466367, 0, 1602466379),
 (90, 54, 'DONE', 17, 1602466491, 28, 1602466520),
-(91, 42, 'DONE', 17, 1603072149, 92, 1603077820);
+(91, 42, 'DONE', 17, 1603072149, 92, 1603077820),
+(92, 37, 'DONE', 17, 1603821689, 34272, 1603855966);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `password_request`
+--
+
+DROP TABLE IF EXISTS `password_request`;
+CREATE TABLE IF NOT EXISTS `password_request` (
+  `id` varchar(100) NOT NULL,
+  `user_id` int(8) NOT NULL,
+  `date_created` datetime NOT NULL,
+  `date_updated` datetime NOT NULL,
+  `status` varchar(10) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
