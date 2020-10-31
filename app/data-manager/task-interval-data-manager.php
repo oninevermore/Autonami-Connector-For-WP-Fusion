@@ -95,6 +95,16 @@ class TaskIntervalDataManager{
         Database::query($query);
     }
     
+    public static function get_all_shared_tasks(){
+        $query = "  SELECT tasks.id, tasks.task_intervals, users.id user_id, users.first_name, users.last_name, users.email 
+                    FROM `shared_task`
+                    INNER JOIN tasks ON tasks.id = shared_task.task_id
+                    INNER JOIN users ON users.id = shared_task.user_id
+                    WHERE tasks.user_id = " . Membership::current_user()->id;
+        $shared_timers = Database::query($query)->fetchAll();
+        return $shared_timers;
+    }
+    
     public static function get_ids_for_share($emails, $id){
         $ids = array();
         if(sizeof($emails) > 0){
