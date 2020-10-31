@@ -83,7 +83,7 @@
                                 if(is_array($shared_timers["users"]) && sizeof($shared_timers["users"]) > 0) {
                                     foreach($shared_timers["users"] as $users){
                                     ?>
-                                    <div class="d-flex align-items-center bg-light-success rounded p-5 mb-5">
+                                    <div class="d-flex align-items-center bg-light-success rounded p-5 mb-5 user-pnl">
                                         <!--begin::Icon-->
                                         <span class="svg-icon svg-icon-success mr-5">
                                             <span class="svg-icon svg-icon-lg">
@@ -106,7 +106,7 @@
                                         </div>
                                         <!--end::Title-->
                                         <!--begin::Lable-->
-                                        <button type="button" class="btn btn-danger font-weight-bold" data-user_id='<?=$users["user_id"]?>'>Remove</button>
+                                        <button type="button" class="btn btn-danger font-weight-bold remove-share" data-share_id='<?=$users["share_id"]?>'>Remove</button>
                                         <!--end::Lable-->
                                     </div>
                                     
@@ -120,6 +120,12 @@
                 <?php 
                             $ctr++;
                         }
+                    }else{
+                    ?>  
+                    <div class='alert alert-danger'>
+                        <span>There were no shared timers yet.</span>
+                    </div>
+                    <?php
                     }
                 ?>
             </div>

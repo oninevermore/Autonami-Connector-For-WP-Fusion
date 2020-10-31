@@ -71,12 +71,20 @@ class ManageAccount extends BaseController{
         }
         return $temp_array;
     }
+    
+    public function remove_share(){
+        TaskIntervalDataManager::unshare_task_intervals_by_id($this->id);
+        $response = new \stdClass;
+        $response->result = "success";
+        $this->response_json($response);
+    }
+    
     private function get_shared_timer_users($shared_timers, $task_id){
         $users = array();
         foreach($shared_timers as $val) {
             if($val["id"] == $task_id){
                 $users[] = array(
-                    "user_id" => $val["user_id"],
+                    "share_id" => $val["share_id"],
                     "first_name" => $val["first_name"],
                     "last_name" => $val["last_name"],
                     "email" => $val["email"]

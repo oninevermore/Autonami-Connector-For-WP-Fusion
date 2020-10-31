@@ -88,6 +88,10 @@ class TaskIntervalDataManager{
         }
     }
     
+    public static function unshare_task_intervals_by_id($id){
+        Database::query("DELETE FROM shared_task WHERE id = " . $id);
+    }
+     
     public static function delete_sub_task_intervals_by_id($id){
         $query = "DELETE FROM `sub_tasks` "
                 . "WHERE id" . (is_array($id) ? " IN(" . implode(",", $id) . ")" : " = " . $id);
@@ -96,7 +100,7 @@ class TaskIntervalDataManager{
     }
     
     public static function get_all_shared_tasks(){
-        $query = "  SELECT tasks.id, tasks.task_intervals, users.id user_id, users.first_name, users.last_name, users.email 
+        $query = "  SELECT tasks.id, tasks.task_intervals, shared_task.id share_id, users.first_name, users.last_name, users.email 
                     FROM `shared_task`
                     INNER JOIN tasks ON tasks.id = shared_task.task_id
                     INNER JOIN users ON users.id = shared_task.user_id
