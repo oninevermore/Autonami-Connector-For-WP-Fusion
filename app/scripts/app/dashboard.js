@@ -102,7 +102,7 @@ var setQueueTimer = function(){
 var checkUpdate = function(){
     var timerChecker = setInterval(function () {
         if(willCheckUpdate){
-            console.log(elapsedSeconds);
+            //console.log(elapsedSeconds);
             $.get(real_url + "/home/running", function (result) {
                 if(willCheckUpdate){
                     if(result.result === "success"){

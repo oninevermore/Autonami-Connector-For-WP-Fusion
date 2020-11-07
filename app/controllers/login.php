@@ -26,7 +26,7 @@ class Login extends BaseController{
         $response = new  \stdClass;
         if(!UserDataManager::is_email_exists($this->email)){
             $result = UserDataManager::add_new_user($this);
-            if($result == null){
+            if($result > 0){
                 $response->result = "success";
             }else{
                 $response->result = "failed";

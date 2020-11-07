@@ -84,6 +84,7 @@ class ManageAccount extends BaseController{
         foreach($shared_timers as $val) {
             if($val["id"] == $task_id){
                 $users[] = array(
+                    "status" => $val["status"],
                     "share_id" => $val["share_id"],
                     "first_name" => $val["first_name"],
                     "last_name" => $val["last_name"],
