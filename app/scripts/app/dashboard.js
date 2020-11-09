@@ -33,6 +33,7 @@ var elapsedSeconds = 0;
 
 var realTotalSeconds = 0;
 var instructionText = "";
+var starttime = new Date();
 
 var getTotalSeconds = function(index){
     var tSeconds = 0;
@@ -156,49 +157,107 @@ var displayLabels = function(){
     $("#elapsed").html((elapsedHours > 9 ? "" : "0") + elapsedHours + ":" + (elapsedMinutes > 9 ? "" : "0") + elapsedMinutes + ":" + (elapsedSeconds > 9 ? "" : "0") + elapsedSeconds);
 }
 
+
+
 var runTimer = function(){
     var btn = $(".pause-play");
     btn.removeClass("btn-success").addClass("btn-warning");
     $("i", btn).removeClass("fa-play-circle").addClass("fa-pause-circle");
+    var totalTimeInSeconds = getTotalSeconds();
     //toggleFullScreen();
     timer = setInterval(function () {
-        displayLabels();
-        if(seconds > 0){
-            seconds = seconds - 1;
-            
-            if(seconds <= 4 && minutes <= 0 && hours <= 0){
-                beep();
+        var now = Date.parse(new Date().toUTCString());
+        var strtym = starttime.getTime();
+        var remaining =  ((strtym / 1000) + totalTimeInSeconds) - (now / 1000);
+        var diff = (now - strtym) / 1000;
+        computeRemaining(remaining + 1);
+        computeElapsed(diff);
+        
+        
+        
+        
+        var tSeconds = 0;
+        if(queues.length > 0){
+            var currentIntervalTotalTime = 0;
+            for (i = 0; i < queues.length; i++) {
+                tSeconds += queues[i].total_seconds;
+                if(tSeconds >  Math.round(diff)){
+                    //console.log(tSeconds + "==" +  Math.floor(diff));
+                    currentIntervalTotalTime = tSeconds;
+                    break;
+                }
             }
-        }else{
-            if(minutes > 0){
-                minutes = minutes - 1;
-                seconds = 59;
-            }else{
-                if(hours > 0){
-                    hours = hours - 1;
-                    minutes = 59;
-                    seconds = 59;
-                }else{
-                    //clearInterval(timer);
-                    if(queues.length > nextQueueIndex){
-                        setQueueTimer();
-                        //runTimer();
-                        computeTotalHours();
-                        var rTotalSeconds = totalHours * 60 * 60;
-                        rTotalSeconds += totalMinutes * 60;
-                        rTotalSeconds += totalSeconds;
-                        var elapsed = realTotalSeconds - rTotalSeconds + 1;
-                        computeElapsedBySeconds(elapsed);
-                        return;
+            
+            var remainingCurrent = ((strtym / 1000) + currentIntervalTotalTime) - (now / 1000);
+            console.log(Math.round(remainingCurrent) + "==" + remainingCurrent);
+            if(remainingCurrent >= 0){
+                if(remainingCurrent > 3600){
+                    hours = Math.floor(remainingCurrent / 3600);
+                    var rElapsedHour = remainingCurrent - (hours * 3600);
+                    if(rElapsedHour >= 60){
+                        minutes =  Math.floor(rElapsedHour / 60);
+                        seconds = rElapsedHour - (minutes * 60);
                     }else{
-                        clearInterval(timer);
-                        //$(".task-item:hidden").show("fast");
+                        minutes = 0;
+                        seconds = rElapsedHour;
+                    }
+                }else{
+                    hours = 0;
+                    if(remainingCurrent >= 60){
+                        minutes =  Math.floor(remainingCurrent / 60);
+                        seconds = Math.floor(remainingCurrent - (minutes * 60));
+                    }else{
+                        minutes = 0;
+                        seconds = Math.floor(remainingCurrent);
                     }
                 }
             }
+            
         }
-        computeRemaining();
-        computeElapsed();
+        if(diff > (tSeconds + 1)){
+            console.log(tSeconds);
+            clearInterval(timer);
+        }else{
+            displayLabels();
+        }
+        
+        
+//        if(seconds > 0){
+//            seconds = seconds - 1;
+//            
+//            if(seconds <= 4 && minutes <= 0 && hours <= 0){
+//                beep();
+//            }
+//        }else{
+//            if(minutes > 0){
+//                minutes = minutes - 1;
+//                seconds = 59;
+//            }else{
+//                if(hours > 0){
+//                    hours = hours - 1;
+//                    minutes = 59;
+//                    seconds = 59;
+//                }else{
+//                    //clearInterval(timer);
+//                    if(queues.length > nextQueueIndex){
+//                        setQueueTimer();
+//                        //runTimer();
+//                        computeTotalHours();
+//                        var rTotalSeconds = totalHours * 60 * 60;
+//                        rTotalSeconds += totalMinutes * 60;
+//                        rTotalSeconds += totalSeconds;
+//                        var elapsed = realTotalSeconds - rTotalSeconds + 1;
+//                        computeElapsedBySeconds(elapsed);
+//                        return;
+//                    }else{
+//                        clearInterval(timer);
+//                        //$(".task-item:hidden").show("fast");
+//                    }
+//                }
+//            }
+//        }
+        //computeRemaining();
+        //computeElapsed();
         
 
     }, 1000);
@@ -233,42 +292,84 @@ var stopTimer = function(preserve = false){
     synth.cancel();
 };
 
-var computeElapsed = function(){
-    if((elapsedSeconds + 1) < 60){
-        elapsedSeconds = elapsedSeconds + 1;
-    }else{
-        if((elapsedMinutes + 1) <= 60){
-            elapsedMinutes = elapsedMinutes + 1;
-            elapsedSeconds = 0;
+var computeElapsed = function(diff){
+    if(diff > 3600){
+        elapsedHours = Math.floor(diff / 3600);
+        var rElapsedHour = diff - (elapsedHours * 3600);
+        if(rElapsedHour >= 60){
+            elapsedMinutes =  Math.floor(rElapsedHour / 60);
+            elapsedSeconds = rElapsedHour - (elapsedMinutes * 60);
         }else{
-            if((elapsedHours + 1) < 60){
-                elapsedHours = elapsedHours + 1;
-                elapsedMinutes = elapsedMinutes + 1;
-                elapsedSeconds = 0;
-            }else{
-
-            }
+            elapsedMinutes = 0;
+            elapsedSeconds = rElapsedHour;
+        }
+    }else{
+        elapsedHours = 0;
+        if(diff >= 60){
+            elapsedMinutes =  Math.floor(diff / 60);
+            elapsedSeconds = Math.floor(diff - (elapsedMinutes * 60));
+        }else{
+            elapsedMinutes = 0;
+            elapsedSeconds = Math.floor(diff);
         }
     }
+    
+//    if((elapsedSeconds + 1) < 60){
+//        elapsedSeconds = elapsedSeconds + 1;
+//    }else{
+//        if((elapsedMinutes + 1) <= 60){
+//            elapsedMinutes = elapsedMinutes + 1;
+//            elapsedSeconds = 0;
+//        }else{
+//            if((elapsedHours + 1) < 60){
+//                elapsedHours = elapsedHours + 1;
+//                elapsedMinutes = elapsedMinutes + 1;
+//                elapsedSeconds = 0;
+//            }else{
+//
+//            }
+//        }
+//    }
 };
 
-var computeRemaining = function(){
-    if(totalSeconds > 0){
-        totalSeconds = totalSeconds - 1;
-    }else{
-        if(totalMinutes > 0){
-            totalMinutes = totalMinutes - 1;
-            totalSeconds = 59;
+var computeRemaining = function(remaining){
+    if(remaining > 3600){
+        totalHours = Math.floor(remaining / 3600);
+        var rElapsedHour = remaining - (totalHours * 3600);
+        if(rElapsedHour >= 60){
+            totalMinutes =  Math.floor(rElapsedHour / 60);
+            totalSeconds = rElapsedHour - (totalMinutes * 60);
         }else{
-            if(totalHours > 0){
-                totalHours = totalHours - 1;
-                totalMinutes = 59;
-                totalSeconds = 59;
-            }else{
-
-            }
+            totalMinutes = 0;
+            totalSeconds = rElapsedHour;
+        }
+    }else{
+        totalHours = 0;
+        if(remaining >= 60){
+            totalMinutes =  Math.floor(remaining / 60);
+            totalSeconds = Math.floor(remaining - (totalMinutes * 60));
+        }else{
+            totalMinutes = 0;
+            totalSeconds = Math.floor(remaining);
         }
     }
+    
+//    if(totalSeconds > 0){
+//        totalSeconds = totalSeconds - 1;
+//    }else{
+//        if(totalMinutes > 0){
+//            totalMinutes = totalMinutes - 1;
+//            totalSeconds = 59;
+//        }else{
+//            if(totalHours > 0){
+//                totalHours = totalHours - 1;
+//                totalMinutes = 59;
+//                totalSeconds = 59;
+//            }else{
+//
+//            }
+//        }
+//    }
 };
 
 var computeTotalHours = function(){
@@ -342,6 +443,7 @@ var computeElapsedBySeconds = function(elapsed){
 
 var bindTaskItem = function(){
     $(".task-item").unbind().click(function () {
+        alert("pasok");
         clearInterval(timer);
         nextQueueIndex = parseInt($(this).data("index"));
         setQueueTimer();
@@ -352,13 +454,18 @@ var bindTaskItem = function(){
         rTotalSeconds += totalSeconds;
         var elapsed = realTotalSeconds - rTotalSeconds + 1;
         computeElapsedBySeconds(elapsed);
-        setTimer(ctimer.id, ctimer.task_id, "RUNNING");
+        setTimer(ctimer.id, ctimer.task_id, "RUNNING",
+            function(){
+                alert("running");
+            }
+        );
     });
 };
 
 var setTimer = function(id, task_id, status, callback){
     willCheckUpdate = false;
     var elapsed = (elapsedHours * 3600) + (elapsedMinutes * 60) + elapsedSeconds;
+    var clientTimestamp = Date.parse(new Date().toUTCString()) / 1000;
     var data = {
         id : id,
         task_id : task_id,
@@ -369,6 +476,16 @@ var setTimer = function(id, task_id, status, callback){
         if(response.result === "success"){
             willCheckUpdate = true;
             if(status !== "DONE"){
+                var serverTimestamp =  response.serverTimestamp;
+                var serverClientRequestDiffTime = serverTimestamp - clientTimestamp;
+                var nowTimeStamp = Date.parse(new Date().toUTCString()) / 1000;
+                
+                var serverClientResponseDiffTime = nowTimeStamp - serverTimestamp;
+                var responseTime = (serverClientRequestDiffTime - nowTimeStamp + clientTimestamp - serverClientResponseDiffTime )/2;
+                var serverTimeOffset = (serverClientResponseDiffTime - responseTime);
+                starttime = new Date();
+                starttime.setTime(starttime.getTime() + (serverTimeOffset * 1000));
+                //alert(starttime);
                 ctimer = response.data;
                 if(callback !== undefined){
                     callback();
@@ -426,25 +543,30 @@ var getEnglishVoice = function(){
 }
 
 var speak = function (tts) {
-    if (tts === '' || tts === undefined) {
-        return;
-    }else{
-        if (synth.speaking) {
-            console.error('speechSynthesis.speaking');
+    try{
+        if (tts === '' || tts === undefined) {
             return;
+        }else{
+            if (synth.speaking) {
+                console.error('speechSynthesis.speaking');
+                return;
+            }
+            var utterThis = new SpeechSynthesisUtterance(tts);
+            utterThis.onend = function (event) {
+                console.log('SpeechSynthesisUtterance.onend');
+            }
+            utterThis.onerror = function (event) {
+                //console.error('SpeechSynthesisUtterance.onerror');
+            }
+            utterThis.voice = getEnglishVoice();
+            utterThis.pitch = 1;
+            utterThis.rate = 1;
+            //synth.speak(utterThis);
         }
-        var utterThis = new SpeechSynthesisUtterance(tts);
-        utterThis.onend = function (event) {
-            console.log('SpeechSynthesisUtterance.onend');
-        }
-        utterThis.onerror = function (event) {
-            console.error('SpeechSynthesisUtterance.onerror');
-        }
-        utterThis.voice = getEnglishVoice();
-        utterThis.pitch = 1;
-        utterThis.rate = 1;
-        synth.speak(utterThis);
+    }catch(err) {
+        console.log(err.message);
     }
+    
 }
 
 var continueTimer = function(elapsed){
@@ -624,7 +746,9 @@ $("document").ready(
             }else{ //PLAY
                 btn.removeClass("btn-success").addClass("btn-warning");
                 $("i", btn).removeClass("fa-play-circle").addClass("fa-pause-circle");
-                setTimer(ctimer.id, ctimer.task_id, "RUNNING", runTimer());
+                setTimer(ctimer.id, ctimer.task_id, "RUNNING", function(){
+                    runTimer();
+                });
             }
         });
         
@@ -641,6 +765,21 @@ $("document").ready(
         });
         bindRun();
         $('[data-toggle="tooltip"]').tooltip();
+        
+        
+//            var clientTimestamp = (new Date()).valueOf();
+//            alert(real_url + '/synch-time?ct='+clientTimestamp);
+//            $.getJSON(real_url + '/synch-time?ct='+clientTimestamp, function( data ) {
+//                alert(data);
+//                var nowTimeStamp = (new Date()).valueOf();
+//                var serverClientRequestDiffTime = data.serverClientRequestDiffTime;
+//                var serverTimestamp = data.serverTimestamp;
+//                var serverClientResponseDiffTime = nowTimeStamp - serverTimestamp;
+//                var responseTime = (serverClientRequestDiffTime - nowTimeStamp + clientTimestamp - serverClientResponseDiffTime )/2
+//
+//                var syncedServerTime = new Date((new Date()).valueOf() + (serverClientResponseDiffTime - responseTime));
+//                alert(syncedServerTime);
+//            });
     }
 );
 

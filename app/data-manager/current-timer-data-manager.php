@@ -5,15 +5,16 @@ use App\Components\Membership;
 
 class CurrentTimerDataManager{
     public static function add_new_timer($timer){
+        $time = time();
         if($timer->id > 0){
             $data = [
                 'task_id' => $timer->task_id,
                 'status' => $timer->status,
-                'last_time_updated' => time(),
+                'last_time_updated' => $time,
                 'elapsed_time' => $timer->elapsed_time
             ];
             if($timer->status == "RUNNING"){
-                $data["date_started"] = time() - $timer->elapsed_time;
+                $data["date_started"] = $time - $timer->elapsed_time;
             }
             
             $result = Database::update("current_timers", 
@@ -25,8 +26,8 @@ class CurrentTimerDataManager{
                 'task_id' => $timer->task_id,
                 'status' => $timer->status,
                 'user_id' => Membership::current_user()->id,
-                'date_started' => time(),
-                'last_time_updated' => time()
+                'date_started' => $time,
+                'last_time_updated' => $time
             ]);  
         }
         

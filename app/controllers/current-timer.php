@@ -42,6 +42,7 @@ class CurrentTimer extends BaseController{
         }
         $response = new \stdClass;
         $response->result = "success";
+        $response->serverTimestamp = time();
         $response->data = $result;  
         $this->response_json($response);
     }
