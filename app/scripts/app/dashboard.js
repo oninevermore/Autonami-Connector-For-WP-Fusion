@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 var synth = window.speechSynthesis;
+var noSleep = new NoSleep();
 const ps = new PerfectScrollbar('#items',{
     suppressScrollX : true
 });
@@ -33,6 +34,7 @@ var elapsedSeconds = 0;
 
 var realTotalSeconds = 0;
 var instructionText = "";
+var refresher = 0;
 
 var getTotalSeconds = function(index){
     var tSeconds = 0;
@@ -103,6 +105,7 @@ var checkUpdate = function(){
     var timerChecker = setInterval(function () {
         if(willCheckUpdate){
             //console.log(elapsedSeconds);
+            var timestamp = Date.parse(new Date().toUTCString()) / 1000;
             $.get(real_url + "/home/running", function (result) {
                 if(willCheckUpdate){
                     if(result.result === "success"){
@@ -116,11 +119,13 @@ var checkUpdate = function(){
                         }else{
                             if(ctimer === null || ctimer === undefined){
                                 $.get(real_url + "/task/details", {id:result.current_timer.task_id}, function (result) {
+                                    var now = Date.parse(new Date().toUTCString()) / 1000;
+                                    var requestTime = now - timestamp;
                                     queues = result;
                                     clearInterval(timer);
                                     openTimer();
                                     if(ctimer.status === "RUNNING"){
-                                        var elapsed = ctimer.time_now -  ctimer.date_started;
+                                        var elapsed = ctimer.time_now -  ctimer.date_started + requestTime;
                                         continueTimer(elapsed);
                                     }
                                 });
@@ -131,9 +136,11 @@ var checkUpdate = function(){
                                         if(result.current_timer.status === "DONE"){
 
                                         }else{
+                                            var now = Date.parse(new Date().toUTCString()) / 1000;
+                                            var requestTime = now - timestamp;
                                             ctimer = result.current_timer;
                                             clearInterval(timer);
-                                            var elapsed = ctimer.time_now -  ctimer.date_started;
+                                            var elapsed = ctimer.time_now -  ctimer.date_started + requestTime;
                                             continueTimer(elapsed);
                                         }
                                     }
@@ -160,6 +167,7 @@ var runTimer = function(){
     var btn = $(".pause-play");
     btn.removeClass("btn-success").addClass("btn-warning");
     $("i", btn).removeClass("fa-play-circle").addClass("fa-pause-circle");
+    refresher = 0;
     //toggleFullScreen();
     timer = setInterval(function () {
         displayLabels();
@@ -168,7 +176,13 @@ var runTimer = function(){
             
             if(seconds <= 4 && minutes <= 0 && hours <= 0){
                 beep();
+            }else{
+                if(refresher >= 300){
+                    refresher = 0;
+                    location.reload();
+                }
             }
+            refresher++;
         }else{
             if(minutes > 0){
                 minutes = minutes - 1;
@@ -610,6 +624,7 @@ $("document").ready(
                     $("#modalItems").modal("show");
                     $(".btnlist").show("fast");
                     $(".timer-control").hide("fast");
+                    noSleep.disable();
                 }
             });
         });
@@ -626,6 +641,7 @@ $("document").ready(
                 $("i", btn).removeClass("fa-play-circle").addClass("fa-pause-circle");
                 setTimer(ctimer.id, ctimer.task_id, "RUNNING", runTimer());
             }
+            noSleep.enable();
         });
         
         $(".restart-timer").click(function () {
@@ -636,7 +652,7 @@ $("document").ready(
             runTimer();
             computeTotalHours();
             bindTaskItem();
-            
+            noSleep.enable();
             //checkUpdate();
         });
         bindRun();

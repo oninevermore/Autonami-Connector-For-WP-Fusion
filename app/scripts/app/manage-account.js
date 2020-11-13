@@ -58,7 +58,44 @@ var bindRemoveShare = function(){
                             "success"
                         );
                         var btnParent = btn.parents(".user-pnl");
-                        var pnlParent = btnParent.parent();
+                        var pnlParent = btnParent.parents(".card");
+                        btnParent.remove();
+                        if(pnlParent.has("div.user-pnl").length <= 0){
+                            pnlParent.remove();
+                        }
+                    }
+                });
+            }
+        });
+    });
+}
+
+var removeInvitation = function(){
+    $(".cancel-invitation").unbind().click(function(){
+        var btn = $(this);
+        var id = btn.data("share_id");
+        var data = {id:id};
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This will cancel your timer invitation to this user.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, cancel it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        }).then(function(result) {
+            if (result.value) {
+                showLoader();
+                $.post(real_url + "/manage-account/cancel-invitation", data, function (response) {
+                    hideLoader();
+                    if(response.result == "success"){
+                        Swal.fire(
+                            "Cancelled!",
+                            "You have cancelled an invitation to this user.",
+                            "success"
+                        );
+                        var btnParent = btn.parents(".user-pnl");
+                        var pnlParent = btnParent.parents(".card");
                         btnParent.remove();
                         if(pnlParent.has("div.user-pnl").length <= 0){
                             pnlParent.remove();
@@ -80,6 +117,7 @@ var bindManageAccount = function(){
             $("#modalManageAccount").modal("show");
             bindSaveAccount();
             bindRemoveShare();
+            removeInvitation();
         });
         return false;
     });

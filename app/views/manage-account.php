@@ -115,7 +115,7 @@
                                         <?php }else{ ?>
                                             <span class="label label-lg label-warning label-inline mt-lg-0 mr-5 mb-lg-0 my-2 font-weight-bold py-4">Awaiting</span>
                                             <!--begin::Lable-->
-                                            <button type="button" class="btn  btn-danger font-weight-bold btn-sm cancel-share" data-share_id='<?=$users["share_id"]?>'>
+                                            <button type="button" class="btn  btn-danger font-weight-bold btn-sm cancel-invitation" data-share_id='<?=$users["share_id"]?>'>
                                                 <i class="flaticon-cancel"></i> Cancel
                                             </button>
                                             <!--end::Lable-->
