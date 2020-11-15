@@ -12,7 +12,7 @@ use App\Helpers\TaskHelper;
 class Home extends BaseController{
 
     var $title = "Homepage";
-    var $scripts = array("dashboard", "task", "manage-account");
+    var $scripts = array("vendors/NoSleep.min", "dashboard", "task", "manage-account");
 
     public function index(){
         $this->model = new \stdClass;

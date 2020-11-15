@@ -79,6 +79,13 @@ class ManageAccount extends BaseController{
         $this->response_json($response);
     }
     
+    public function cancel_invitation(){
+        TaskIntervalDataManager::cancel_task_intervals_invitation_by_id($this->id);
+        $response = new \stdClass;
+        $response->result = "success";
+        $this->response_json($response);
+    }
+    
     private function get_shared_timer_users($shared_timers, $task_id){
         $users = array();
         foreach($shared_timers as $val) {

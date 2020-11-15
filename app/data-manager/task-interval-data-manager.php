@@ -91,6 +91,12 @@ class TaskIntervalDataManager{
     public static function unshare_task_intervals_by_id($id){
         Database::query("DELETE FROM shared_task WHERE id = " . $id);
     }
+    
+    public static function cancel_task_intervals_invitation_by_id($id){
+        //die("DELETE FROM shared_task_request WHERE id = '" . $id . "'");
+        Database::query("DELETE FROM shared_task_request WHERE id = '" . $id . "'");
+        
+    }
      
     public static function delete_sub_task_intervals_by_id($id){
         $query = "DELETE FROM `sub_tasks` "
