@@ -14,7 +14,7 @@ class CurrentTimerDataManager{
                 'elapsed_time' => $timer->elapsed_time
             ];
             if($timer->status == "RUNNING"){
-                $data["date_started"] = $time - $timer->elapsed_time;
+                $data["date_started"] = $time;
             }
             
             $result = Database::update("current_timers", 
