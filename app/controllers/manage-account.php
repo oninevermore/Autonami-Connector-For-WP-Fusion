@@ -15,6 +15,7 @@ class ManageAccount extends BaseController{
         $this->model = new \stdClass;
         $this->model->user = Membership::current_user();
         $this->model->shared_timers = $this->get_all_shared_timers();
+        $this->model->timer_invitations = $this->get_all_timer_invitations();
     } 
     
     public function save(){
@@ -72,6 +73,29 @@ class ManageAccount extends BaseController{
         return $temp_array;
     }
     
+    private function get_all_timer_invitations(){
+        $temp_array = array();
+        $timer_invitations = TaskIntervalDataManager::get_all_timer_invitations();
+        if(!empty($timer_invitations) && is_array($timer_invitations)){
+            $i = 0;
+            $key_array = array();
+            foreach($timer_invitations as $val) {
+                if (!isset($key_array[$val["email"]])) {
+                    $key_array[$val["email"]] = true;
+                    $temp_array[] = array(
+                        "user_id" => $val["user_id"],
+                        "email" => $val["email"],
+                        "first_name" => $val["first_name"],
+                        "last_name" => $val["last_name"],
+                        "invitations" => $this->get_timer_invitations_by_user($timer_invitations, $val["email"])
+                    );
+                }
+                $i++;
+            }
+        }
+        return $temp_array;
+    }
+    
     public function remove_share(){
         TaskIntervalDataManager::unshare_task_intervals_by_id($this->id);
         $response = new \stdClass;
@@ -84,6 +108,36 @@ class ManageAccount extends BaseController{
         $response = new \stdClass;
         $response->result = "success";
         $this->response_json($response);
+    }
+    
+    public function reject_invitation(){
+        TaskIntervalDataManager::reject_task_invitation($this->id);
+        $response = new \stdClass;
+        $response->result = "success";
+        $this->response_json($response);
+    }
+    
+    public function approved_invitation(){
+        $task_invitation = TaskIntervalDataManager::get_task_invitation_by_id($this->id);
+        TaskIntervalDataManager::accept_task_invitation($this->id, $task_invitation["timer_ids"], $task_invitation["email"]);
+        $response = new \stdClass;
+        $response->result = "success";
+        $this->response_json($response);
+    }
+    
+    private function get_timer_invitations_by_user($timer_invitations, $email){
+        $timers = array();
+        foreach($timer_invitations as $val) {
+            if($val["email"] == $email){
+                $full_details = json_decode($val["task_intervals"]);
+                $timers[] = array(
+                    "status" => $val["status"],
+                    "name" => $full_details->timer_set_name,
+                    "share_id" => $val["share_id"]
+                );
+            }
+        }
+        return $timers;
     }
     
     private function get_shared_timer_users($shared_timers, $task_id){

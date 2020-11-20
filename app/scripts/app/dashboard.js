@@ -33,7 +33,7 @@ var totalElapsed = 0;
 
 var realTotalSeconds = 0;
 var instructionText = "";
-var starttime = new Date();
+var starttime = 0;
 
 var getTotalSeconds = function(index, isElapsed){
     var tSeconds = 0;
@@ -134,8 +134,9 @@ var checkUpdate = function(){
                                         var serverClientResponseDiffTime = nowTimeStamp - serverTimestamp;
                                         var responseTime = (serverClientRequestDiffTime - nowTimeStamp + timestamp2 - serverClientResponseDiffTime )/2;
                                         var serverTimeOffset = (serverClientResponseDiffTime - responseTime);
-                                        starttime = new Date();
-                                        starttime.setTime(((ctimer.time_now -  ctimer.date_started) * 1000) + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
+                                        //starttime = new Date();
+                                        //starttime.setTime(((ctimer.time_now -  ctimer.date_started) * 1000) + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
+                                        starttime = parseInt(ctimer.time_now) - parseInt(ctimer.date_started) + serverTimeOffset - parseInt(ctimer.elapsed_time);
                                         runTimer();
                                     }
                                 });
@@ -155,17 +156,18 @@ var checkUpdate = function(){
                                             var serverClientResponseDiffTime = nowTimeStamp - serverTimestamp;
                                             var responseTime = (serverClientRequestDiffTime - nowTimeStamp + timestamp - serverClientResponseDiffTime )/2;
                                             var serverTimeOffset = (serverClientResponseDiffTime - responseTime);
-                                            starttime = new Date();
-                                            //starttime.setTime(starttime.getTime() + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
-                                            starttime.setTime((ctimer.date_started * 1000) + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
+                                            //starttime = new Date();
+                                            //starttime.setTime((ctimer.date_started * 1000) + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
+                                            starttime = parseInt(ctimer.date_started)  + serverTimeOffset - parseInt(ctimer.elapsed_time);
                                             if(ctimer.status === "RUNNING"){
                                                 runTimer();
                                             }
                                             
                                             if(ctimer.status === "PAUSE"){
                                                 if(ctimer.elapsed_time > 0){
-                                                    starttime.setTime(starttime.getTime() + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
-                                                    pause();
+                                                    //starttime.setTime(starttime.getTime() + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
+                                                    //starttime = nowTimeStamp + serverTimeOffset - parseInt(ctimer.elapsed_time);
+                                                    pause(ctimer.elapsed_time);
                                                 }
                                             }
                                         }
@@ -197,15 +199,15 @@ var runTimer = function(){
     var totalTimeInSeconds = getTotalSeconds();
     //toggleFullScreen();
     timer = setInterval(function () {
-        var now = Date.parse(new Date().toUTCString());
-        var strtym = starttime.getTime();
-        var remaining =  Math.round(((strtym / 1000) + totalTimeInSeconds) - (now / 1000)); 
-        var diff = Math.round((now - strtym) / 1000);
+        var now = Date.parse(new Date().toUTCString()) / 1000;
+        //var strtym = starttime;
+        var remaining =  Math.round((starttime + totalTimeInSeconds) - now); 
+        var diff = Math.round(now - starttime);
         totalElapsed = diff;
-        computeRemaining(remaining + 1);
+        computeRemaining(remaining);
         computeElapsed(diff);
         var tSeconds = computeCurrentInterval(diff);
-        if(diff > (tSeconds + 1)){
+        if(diff > (tSeconds)){
             console.log(tSeconds);
             clearInterval(timer);
             totalElapsed = 0;
@@ -223,7 +225,7 @@ var computeCurrentInterval = function(diff){
         for (i = 0; i < queues.length; i++) {
             tSeconds += queues[i].total_seconds;
             if(tSeconds >  Math.round(diff - 1)){
-                console.log(tSeconds + "==" +  Math.round(diff - 1) + "==" + i + "==" + nextQueueIndex);
+                //console.log(tSeconds + "==" +  Math.round(diff - 1) + "==" + i + "==" + nextQueueIndex);
 
                 if(nextQueueIndex != i){
                     nextQueueIndex = i;
@@ -235,7 +237,7 @@ var computeCurrentInterval = function(diff){
 
         }
 
-        var remainingCurrent =  currentIntervalTotalTime - (diff - 1); //((strtym / 1000) + currentIntervalTotalTime) - (now / 1000);
+        var remainingCurrent =  currentIntervalTotalTime - (diff); //((strtym / 1000) + currentIntervalTotalTime) - (now / 1000);
         //console.log(Math.round(remainingCurrent) + "==" + remainingCurrent);
         if(remainingCurrent >= 0){
             if(remainingCurrent > 3600){
@@ -373,16 +375,13 @@ var stopTimer = function(preserve = false){
     synth.cancel();
 };
 
-var pause = function(){
+var pause = function(elapsed){
     var totalTimeInSeconds = getTotalSeconds();
-    var now = Date.parse(new Date().toUTCString());
-    var strtym = starttime.getTime();
-    var remaining =  Math.round(((strtym / 1000) + totalTimeInSeconds) - (now / 1000)); 
-    var diff = Math.round((now - strtym) / 1000);
-    totalElapsed = diff;
-    computeRemaining(remaining + 1);
-    computeElapsed(diff);
-    computeCurrentInterval(diff);
+    var remaining =  totalTimeInSeconds - elapsed; 
+    totalElapsed = elapsed;
+    computeRemaining(remaining);
+    computeElapsed(elapsed);
+    computeCurrentInterval(elapsed);
     
     var btn = $(".pause-play");
     btn.removeClass("btn-warning").addClass("btn-success");
@@ -463,9 +462,17 @@ var setTimer = function(id, task_id, status, callback){
                 var serverClientResponseDiffTime = nowTimeStamp - serverTimestamp;
                 var responseTime = (serverClientRequestDiffTime - nowTimeStamp + clientTimestamp - serverClientResponseDiffTime )/2;
                 var serverTimeOffset = (serverClientResponseDiffTime - responseTime);
-                starttime = new Date();
-                starttime.setTime(starttime.getTime() + (serverTimeOffset * 1000) - (response.data.elapsed_time * 1000));
+                //starttime = new Date();
+                //starttime.setTime(starttime.getTime() + (serverTimeOffset * 1000) - (response.data.elapsed_time * 1000));
+                starttime = nowTimeStamp + serverTimeOffset - parseInt(response.data.elapsed_time) ;
                 ctimer = response.data;
+                if(ctimer.status === "PAUSE"){
+                    if(ctimer.elapsed_time > 0){
+                        //starttime.setTime(starttime.getTime() + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
+                        //starttime = nowTimeStamp + serverTimeOffset - parseInt(ctimer.elapsed_time);
+                        pause(ctimer.elapsed_time);
+                    }
+                }
                 if(callback !== undefined){
                     callback();
                 }
@@ -566,18 +573,19 @@ var init = function(){
                 var serverClientResponseDiffTime = nowTimeStamp - serverTimestamp;
                 var responseTime = (serverClientRequestDiffTime - nowTimeStamp + clientTimestamp - serverClientResponseDiffTime )/2;
                 var serverTimeOffset = (serverClientResponseDiffTime - responseTime);
-                starttime = new Date();
+                starttime = nowTimeStamp;
                 
                 if(ctimer.status === "RUNNING"){
-                    starttime.setTime((ctimer.date_started * 1000) + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
-                    
+                    //starttime.setTime((ctimer.date_started * 1000) + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
+                    starttime = parseInt(ctimer.date_started) + serverTimeOffset - parseInt(ctimer.elapsed_time);
                     runTimer();
                 }
                 
                 if(ctimer.status === "PAUSE"){
                     if(ctimer.elapsed_time > 0){
-                        starttime.setTime(starttime.getTime() + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
-                        pause();
+                        //starttime.setTime(starttime.getTime() + (serverTimeOffset * 1000) - (ctimer.elapsed_time * 1000));
+                        //starttime = nowTimeStamp + serverTimeOffset - parseInt(ctimer.elapsed_time);
+                        pause(ctimer.elapsed_time);
                     }
                 }
             }

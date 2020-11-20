@@ -16,6 +16,14 @@
                 <span class="nav-text">Shared Timers</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#timer-invitations" aria-controls="timer-invitations">
+                <span class="nav-icon">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                </span>
+                <span class="nav-text">Timer Invitations</span>
+            </a>
+        </li>
     </ul>
     <div class="tab-content mt-5" id="myTabContent">
         <div class="tab-pane fade active show" id="account" role="tabpanel" aria-labelledby="account-tab">
@@ -65,7 +73,7 @@
             </form>
         </div>
         <div class="tab-pane fade" id="shared-timer" role="tabpanel" aria-labelledby="shared-timer-tab">
-            <div class="accordion accordion-solid accordion-toggle-plus" id="accordionExample6">
+            <div class="accordion accordion-solid accordion-toggle-plus" id="c">
                 <?php 
                     if(is_array($model->shared_timers) && sizeof($model->shared_timers) > 0) {
                         $ctr=0;
@@ -77,7 +85,7 @@
                                 <i class="flaticon-stopwatch"></i> <?=$shared_timers["name"]?>
                             </div>
                         </div>
-                        <div id="collapseOne<?=$shared_timers["id"]?>" class="collapse <?=($ctr == 0 ? "show" : "")?>" data-parent="#accordionExample6">
+                        <div id="collapseOne<?=$shared_timers["id"]?>" class="collapse <?=($ctr == 0 ? "show" : "")?>" data-parent="#accordionInvitations">
                             <div class="card-body">
                                 <?php 
                                 if(is_array($shared_timers["users"]) && sizeof($shared_timers["users"]) > 0) {
@@ -136,6 +144,64 @@
                     ?>  
                     <div class='alert alert-danger'>
                         <span>There were no shared timers yet.</span>
+                    </div>
+                    <?php
+                    }
+                ?>
+            </div>
+        </div>
+        
+        <div class="tab-pane fade" id="timer-invitations" role="tabpanel" aria-labelledby="timer-invitation-tab">
+            <div class="accordion accordion-solid accordion-toggle-plus" id="accordionInvitations">
+                <?php 
+                    if(is_array($model->timer_invitations) && sizeof($model->timer_invitations) > 0) {
+                        $ctr=0;
+                        foreach($model->timer_invitations as $timer_invitations){
+                ?>
+                    <div class="card">
+                        <div class="card-header" id="headingOne6">
+                            <div class="card-title<?=($ctr == 0 ? "" : " collapsed")?>" data-toggle="collapse" data-target="#collapseOne<?=$timer_invitations["user_id"]?>">
+                                <i class="far fa-user-circle"></i> <?=$timer_invitations["first_name"]?> <?=$timer_invitations["last_name"]?>
+                                <small class="text-muted font-weight-bold">(<?=$timer_invitations["email"]?>)</small>
+                            </div>
+                        </div>
+                        <div id="collapseOne<?=$timer_invitations["user_id"]?>" class="collapse <?=($ctr == 0 ? "show" : "")?>" data-parent="#accordionInvitations">
+                            <div class="card-body">
+                                <?php 
+                                if(is_array($timer_invitations["invitations"]) && sizeof($timer_invitations["invitations"]) > 0) {
+                                    foreach($timer_invitations["invitations"] as $timer){
+                                    ?>
+                                    <div class="d-flex align-items-center bg-light-success rounded p-5 mb-5 user-pnl">
+                                        <!--begin::Icon-->
+                                        <i class="flaticon-stopwatch text-success mr-2"></i>
+                                        <!--end::Icon-->
+                                        <!--begin::Title-->
+                                        <div class="d-flex flex-column flex-grow-1 mr-2">
+                                            <a href="#" class="font-weight-bold text-dark-75 text-hover-primary font-size-lg mb-1"><?=$timer["name"]?></a>
+                                        </div>
+                                        <!--end::Title-->
+                                        <button type="button" class="btn  btn-danger font-weight-bold btn-sm reject-invitation  mr-2" data-share_id='<?=$timer["share_id"]?>'>
+                                            <i class="flaticon-cancel"></i> Reject
+                                        </button>
+                                        <button type="button" class="btn  btn-success font-weight-bold btn-sm approved-invitation" data-share_id='<?=$timer["share_id"]?>'>
+                                            <i class="fas fa-check-circle"></i> Approved
+                                        </button>
+                                    </div>
+                                    
+                                    <?php
+                                    }
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php 
+                            $ctr++;
+                        }
+                    }else{
+                    ?>  
+                    <div class='alert alert-danger'>
+                        <span>There were no timer invitations yet.</span>
                     </div>
                     <?php
                     }

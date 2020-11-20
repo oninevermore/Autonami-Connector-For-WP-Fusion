@@ -123,6 +123,18 @@ class TaskIntervalDataManager{
         return $shared_timers;
     }
     
+    public static function get_all_timer_invitations(){
+        $query = "  SELECT  shared_task_request.status, users.id user_id, tasks.id, tasks.task_intervals, shared_task_request.id share_id, users.first_name, users.last_name, users.email 
+                    FROM    `shared_task_request`, `tasks`, `users`
+                    WHERE   users.id = tasks.user_id
+                    AND     tasks.id IN (shared_task_request.timer_ids)
+                    AND     shared_task_request.status = 'PENDING'
+                    AND     shared_task_request.email = '" . Membership::current_user()->email . "' " .
+                    "AND    tasks.id NOT IN(SELECT task_id FROM shared_task WHERE shared_task.task_id = tasks.id AND shared_task.user_id = users.id)";
+        $timer_invitations = Database::query($query)->fetchAll();
+        return $timer_invitations;
+    }
+    
     public static function get_ids_for_share($emails, $id){
         $ids = array();
         if(sizeof($emails) > 0){
@@ -173,6 +185,7 @@ class TaskIntervalDataManager{
                         . "     WHERE   shared_task.user_id = users.id "
                         . "     AND     shared_task.task_id = $_id"
                         . ")";
+                die($query);
                 Database::query($query);
             }
             Database::update("shared_task_request", [
@@ -181,6 +194,14 @@ class TaskIntervalDataManager{
                 ['id' => $id]
             );  
         }
+    }
+    
+    public static function reject_task_invitation($id){
+        Database::update("shared_task_request", [
+            'status' => "REJECTED",
+            'date_updated' => date("Y-m-d h:i:s")],
+            ['id' => $id]
+        );  
     }
     
     
