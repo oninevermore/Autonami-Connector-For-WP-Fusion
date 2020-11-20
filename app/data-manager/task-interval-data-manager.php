@@ -138,17 +138,21 @@ class TaskIntervalDataManager{
     public static function get_ids_for_share($emails, $id){
         $ids = array();
         if(sizeof($emails) > 0){
+            $_ids = explode(",", $id);
             foreach ($emails as $_email){
-                $request_id =  uniqid();  
-                Database::insert("shared_task_request", [
-                    'id' => $request_id,
-                    'timer_ids' => $id,
-                    'email' => $_email,
-                    'status' => "PENDING",
-                    'date_created' => date("Y-m-d h:i:s")
-                ]);  
-                
-                $ids[] = array($_email, $request_id);
+                if(is_array($_ids)){
+                    foreach($_ids as $_id){
+                        $request_id =  uniqid();  
+                        Database::insert("shared_task_request", [
+                            'id' => $request_id,
+                            'timer_ids' => $_id,
+                            'email' => $_email,
+                            'status' => "PENDING",
+                            'date_created' => date("Y-m-d h:i:s")
+                        ]); 
+                        $ids[] = array($_email, $request_id);
+                    }
+                }
             }
         }   
         return $ids;
@@ -185,7 +189,6 @@ class TaskIntervalDataManager{
                         . "     WHERE   shared_task.user_id = users.id "
                         . "     AND     shared_task.task_id = $_id"
                         . ")";
-                die($query);
                 Database::query($query);
             }
             Database::update("shared_task_request", [
