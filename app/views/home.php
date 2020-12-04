@@ -197,27 +197,30 @@
 </div>
 
 <div class="btnlist">
-    <a href="<?=REAL_URL?>/logout" title="Logout" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-danger"><i class="fas fa-sign-out-alt"></i></a>
-    <button title="Manage Account" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-primary btnManageAccount"><i class="fas fa-user-edit"></i></button>
-    <button title="Saved Timet Sets" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-info btnTimerSets"><i class="fas fa-th-list"></i></button>
-    <div class="btn-group" role="group">
-        <button title="New Timer Set" data-theme="dark" type="button" class="btn btn-success font-weight-bold dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="far fa-plus-square"></i>
-        </button>
-        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <a class="dropdown-item btnNewTimer" href="<?= REAL_URL ?>/task?timer_type=0">Custom Timer</a>
-            <a class="dropdown-item btnNewTimer" href="<?= REAL_URL ?>/task?timer_type=1">HIIT Timer</a>
-            <a class="dropdown-item btnNewTimer" href="<?= REAL_URL ?>/task?timer_type=2">Round Timer</a>
-            <a class="dropdown-item btnNewTimer" href="<?= REAL_URL ?>/task?timer_type=3">Circuit/Tabata Timer</a>
-            <a class="dropdown-item btnNewTimer" href="<?= REAL_URL ?>/task?timer_type=4">Compound Timer</a>
-        </div>
+    <a href="<?=REAL_URL?>/logout" title="Logout" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-danger btn-logout"><i class="fas fa-sign-out-alt"></i></a>
+    <div id="btnMain">
+        <button title="Manage Account" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-primary btnManageAccount"><i class="fas fa-user-edit"></i></button>
+        <button title="Saved Timet Sets" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-info btnTimerSets"><i class="fas fa-th-list"></i></button>
+        <div class="btn-group" role="group">
+            <button title="New Timer Set" data-theme="dark" type="button" class="btn btn-success font-weight-bold dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="far fa-plus-square"></i>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                <a class="dropdown-item btnNewTimer" href="<?= REAL_URL ?>/task?timer_type=0">Custom Timer</a>
+                <a class="dropdown-item btnNewTimer" href="<?= REAL_URL ?>/task?timer_type=1">HIIT Timer</a>
+                <a class="dropdown-item btnNewTimer" href="<?= REAL_URL ?>/task?timer_type=2">Round Timer</a>
+                <a class="dropdown-item btnNewTimer" href="<?= REAL_URL ?>/task?timer_type=3">Circuit/Tabata Timer</a>
+                <a class="dropdown-item btnNewTimer" href="<?= REAL_URL ?>/task?timer_type=4">Compound Timer</a>
+            </div>
+        </div>    
+    </div>
+    <div class="timer-control">
+        <button title="Pause/Play" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-warning pause-play"><i class="far fa-pause-circle"></i></button>
+        <button title="Restart" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-info restart-timer"><i class="fas fa-sync-alt"></i></button>
+        <button title="Cancel Timer" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-danger cancel-timer"><i class="fas fa-times"></i></button>
     </div>
 </div>
-<div class="timer-control">
-    <button title="Pause/Play" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-warning pause-play"><i class="far fa-pause-circle"></i></button>
-    <button title="Restart" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-info restart-timer"><i class="fas fa-sync-alt"></i></button>
-    <button title="Cancel Timer" data-toggle="tooltip" data-theme="dark" type="button" class="btn btn-icon btn-circle btn-lg mr-2 btn-danger cancel-timer"><i class="fas fa-times"></i></button>
-</div>
+
     
 <input type="hidden" id="timerDetails" value='<?=htmlentities($model->timer_details, ENT_QUOTES)?>'/>
 <input type="hidden" id="currentTimer" value='<?=$model->current_timer?>'/>

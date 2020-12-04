@@ -116,7 +116,7 @@ var checkUpdate = function(){
                             if($(".timer-control").is(":visible")){
                                 stopTimer();
                                 $("#modalItems").modal("show");
-                                $(".btnlist").show("fast");
+                                $("#btnMain").show("fast");
                                 $(".timer-control").hide("fast");
                             }
                         }else{
@@ -175,6 +175,39 @@ var checkUpdate = function(){
                                }else{
 
                                } 
+                            }
+                        }
+                        
+                        //notification here
+                        if(result.notifications !== null){
+                            if(result.notifications.length > 0){
+                                toastr.options = {
+                                    "closeButton": true,
+                                    "debug": false,
+                                    "newestOnTop": false,
+                                    "progressBar": false,
+                                    "positionClass": "toast-top-right",
+                                    "preventDuplicates": true,
+                                    "onclick": null,
+                                    "showDuration": "300",
+                                    "hideDuration": "1000",
+                                    "timeOut": "5000",
+                                    "extendedTimeOut": "1000",
+                                    "showEasing": "swing",
+                                    "hideEasing": "linear",
+                                    "showMethod": "fadeIn",
+                                    "hideMethod": "fadeOut"
+                                };
+                                for (i = 0; i < result.notifications.length; i++) {
+                                    var item = result.notifications[i];
+                                    toastr.info("<b>" + item.first_name + " " + item.last_name + "</b> has shared timer to you.");
+                                    var data = {
+                                        id : item.id
+                                    };
+                                    $.post(real_url + "/home/add-shared-task-request-shown",data, function (response) {
+                                        
+                                    });
+                                }
                             }
                         }
                     }
@@ -500,7 +533,7 @@ var openTimer = function(){
     computeTotalHours();
     updateItemHeight();    
     $("#modalItems").modal("hide");
-    $(".btnlist").hide("fast");
+    $("#btnMain").hide("fast");
     $(".timer-control").show("fast");
 
     var btn = $(".pause-play");
@@ -636,7 +669,7 @@ $("document").ready(
                     setTimer(ctimer.id, ctimer.task_id, "DONE");
                     stopTimer();
                     $("#modalItems").modal("show");
-                    $(".btnlist").show("fast");
+                    $("#btnMain").show("fast");
                     $(".timer-control").hide("fast");
                     noSleep.disable();
                 }

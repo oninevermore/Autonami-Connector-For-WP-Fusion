@@ -15,11 +15,14 @@ body{
 }
 
 .timer h1 {
-  text-align: center;
-  font-family: "Arial Black";   
-  font-size: 20.9vw;
-  line-height: 23VW;
-  transform: scale(1, 1.5);
+    text-align: center;
+    font-family: "Arial Black";
+    font-size: 20vw;
+    line-height: 23VW;
+    transform: scale(1, 1.5);
+}
+#timerGrp{
+    padding-left: 33px;
 }
 
 .timer{
@@ -28,13 +31,23 @@ body{
 
 .btnlist{
     position: fixed;
-    left:20px;
-    top: 17px;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: #3f3f3f;
+    width: 53px;
+    border-right: 1px solid black;
 }
+
+.btnlist .btn{
+    margin-top: 10px;
+    margin-left: 3px;
+}
+
 .timer-control{
-    position: fixed;
+/*    position: fixed;
     right: 20px;
-    top: 17px;
+    top: 17px;*/
     display: none;
 }
 .task-item{
@@ -46,4 +59,9 @@ body{
 .chk{
     padding-top: 0;
     margin-top: -26px;
+}
+
+.btn-logout{
+    position: absolute;
+    bottom: 7px;
 }

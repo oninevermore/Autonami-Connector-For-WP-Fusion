@@ -135,6 +135,26 @@ class TaskIntervalDataManager{
         return $timer_invitations;
     }
     
+    public static function add_shared_task_request_shown($id){
+        Database::insert("shared_task_request_shown", [
+            'id' => $id,
+            'date_shown' => date("Y-m-d h:i:s")
+        ]);  
+    }
+    
+    public static function get_all_timer_invitations_not_shown(){
+        $query = "  SELECT  shared_task_request.id, users.first_name, users.last_name, users.email 
+                    FROM    `shared_task_request`, `tasks`, `users`
+                    WHERE   users.id = tasks.user_id
+                    AND     tasks.id IN (shared_task_request.timer_ids)
+                    AND     shared_task_request.status = 'PENDING'
+                    AND     shared_task_request.email = '" . Membership::current_user()->email . "' " .
+                    "AND    tasks.id NOT IN(SELECT task_id FROM shared_task WHERE shared_task.task_id = tasks.id AND shared_task.user_id = users.id)
+                    AND     shared_task_request.id NOT IN(SELECT shared_task_request_shown.id FROM shared_task_request_shown WHERE shared_task_request_shown.id = shared_task_request.id)";
+        $timer_invitations = Database::query($query)->fetchAll();
+        return $timer_invitations;
+    }
+    
     public static function get_ids_for_share($emails, $id){
         $ids = array();
         if(sizeof($emails) > 0){

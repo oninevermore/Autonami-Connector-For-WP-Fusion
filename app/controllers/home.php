@@ -57,10 +57,26 @@ class Home extends BaseController{
             $current_timer = (object)$result[0];
             $current_timer->time_now = time();
         }
+        $notifications = null;
+        if(isset($_SESSION["LAST_CHECK"])){
+            if((time() - (int)$_SESSION["LAST_CHECK"]) > 10){
+                $notifications = TaskIntervalDataManager::get_all_timer_invitations_not_shown();
+                $_SESSION["LAST_CHECK"] = time();
+            }
+        }else{
+            $notifications = TaskIntervalDataManager::get_all_timer_invitations_not_shown();
+            $_SESSION["LAST_CHECK"] = time();
+        }
+        
         $response = new \stdClass;
         $response->result = "success";
         $response->current_timer = $current_timer; 
+        $response->notifications =  $notifications;
         $this->response_json($response);
     }
     
+    
+    public function add_shared_task_request_shown(){
+        TaskIntervalDataManager::add_shared_task_request_shown($_POST["id"]);
+    }
 }       
