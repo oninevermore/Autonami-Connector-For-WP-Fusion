@@ -54,4 +54,6 @@ class MailerHelper {
         $headers .= 'From: <' . $from . '>' . "\r\n";
         mail($email, $subject, $body, $headers);
     }
+    
+    public static function 
 }

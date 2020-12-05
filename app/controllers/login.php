@@ -6,6 +6,7 @@ use App\Core\BaseController;
 use App\DataManager\UserDataManager;
 use App\Components\Membership;
 use App\Helpers\MailerHelper;
+use App\Core\Vendor;
 
 class Login extends BaseController{
 
@@ -17,9 +18,19 @@ class Login extends BaseController{
     );
 
     public function index(){
+        Vendor::load("google");
+        
+        $client = new \Google_Client();
+        $client->setClientId(GOOGLE_CLIENT_ID);
+        $client->setClientSecret(GOOGLE_CLIENT_SECRET);
+        $client->setRedirectUri(GOOGLE_REDIRECT_URI);
+        $client->addScope("email");
+        //$client->addScope("profile");
+        
         $this->model = new \stdClass;
         $redirect = filter_input(INPUT_GET, "redirect");
         $this->model->redirect = $redirect;
+        $this->model->google_auth_url = $client->createAuthUrl();
     }
 
     public function add_new_user(){
