@@ -55,5 +55,4 @@ class MailerHelper {
         mail($email, $subject, $body, $headers);
     }
     
-    public static function 
 }
